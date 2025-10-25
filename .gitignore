@@ -42,3 +42,4 @@
 
 .PVS-Studio
 cmake-build-debug
+.idea

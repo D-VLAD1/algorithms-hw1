@@ -17,7 +17,18 @@ private:
     std::string m_phone_number; // 38(0xx)xx-xx-xxx
 
 public:
+    student_t();
     explicit student_t(const std::string& csv_row);
+
+    std::string get_group() const;
+    void set_group(const std::string& new_group);
+
+    std::string get_email() const;
+    float get_rating() const;
+    std::string get_name() const;
+    std::string get_surname() const;
+
+    std::string to_string();
 };
 
 #endif
