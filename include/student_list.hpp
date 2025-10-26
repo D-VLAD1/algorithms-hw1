@@ -53,7 +53,7 @@ public:
     void change_group_by_email(const std::string& email, const std::string& new_group);
     std::pair<std::string, float> get_largest_rate_group();
 
-    void sort_by_name_surname_to_csv(const std::string &filename);
+    void sort_by_name_surname_to_csv(const std::string &filename, bool write_csv);
 
     ~student_list_t();
 };

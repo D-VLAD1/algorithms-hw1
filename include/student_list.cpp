@@ -118,19 +118,22 @@ std::vector<student_t> tree_traversal(const node_t* node) {
 }
 
 
-void student_list_t::sort_by_name_surname_to_csv(const std::string& filename) {
+void student_list_t::sort_by_name_surname_to_csv(const std::string& filename, bool write_csv) {
     std::vector<student_t> traversal = tree_traversal(m_students);
-    std::ofstream file(filename);
 
-    if (!file.is_open()) {
-        throw std::runtime_error("Cannot write the file");
-    }
+    if (write_csv) {
+        std::ofstream file(filename);
 
-    for (auto& student : traversal) {
-        std::string csv_row = student.to_string();
-        file << csv_row + "\n";
+        if (!file.is_open()) {
+            throw std::runtime_error("Cannot write the file");
+        }
+
+        for (auto& student : traversal) {
+            std::string csv_row = student.to_string();
+            file << csv_row + "\n";
+        }
+        file.close();
     }
-    file.close();
 }
 
 void delete_tree(node_t* node) {
