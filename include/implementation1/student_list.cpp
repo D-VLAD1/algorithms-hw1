@@ -1,4 +1,4 @@
-#include "student_list.hpp"
+#include "student_list.h"
 
 #include <fstream>
 
@@ -7,7 +7,7 @@ student_list_t::student_list_t(const std::vector<std::string>& csv) {
     size_t size = csv.size();
     for (size_t i = 0; i < size; ++i) {
         const std::string& curr_str = csv[i];
-        student_t* student = new student_t(curr_str);
+        auto* student = new student_t(curr_str);
 
         if (!m_students) {
             m_students = new node_t(nullptr, nullptr, student);
@@ -52,8 +52,8 @@ student_list_t::student_list_t(const std::vector<std::string>& csv) {
 
         std::string group = student->get_group();
         std::string email = student->get_email();
-        m_hash_group[group].push_back(*student);
-        m_hash_emails[email] = *student;
+        m_hash_group[group].push_back(student);
+        m_hash_emails[email] = student;
     }
 }
 
@@ -71,15 +71,15 @@ std::pair<std::string, int> student_list_t::get_largest_group() {
 }
 
 void student_list_t::change_group_by_email(const std::string& email, const std::string& new_group) {
-    student_t student = m_hash_emails[email];
+    student_t* student = m_hash_emails[email];
 
-    std::string prev_group = student.get_group();
-    std::vector<student_t> prev_group_members = m_hash_group[prev_group];
+    std::string prev_group = student->get_group();
+    std::vector<student_t*>& prev_group_members = m_hash_group[prev_group];
     std::erase_if(prev_group_members,
-        [&](const student_t& s) { return s.get_email() == email; }
+        [&](const student_t* s) { return s->get_email() == email; }
         );
 
-    student.set_group(new_group);
+    student->set_group(new_group);
     m_hash_group[new_group].push_back(student);
 }
 
@@ -88,8 +88,8 @@ std::pair<std::string, float> student_list_t::get_largest_rate_group() {
 
     for (auto& [group_name, students] : m_hash_group) {
         float curr_sum = 0;
-        for (student_t& student : students) {
-            curr_sum += student.get_rating();
+        for (student_t* student : students) {
+            curr_sum += student->get_rating();
         }
         curr_sum /= students.size();
 
@@ -102,16 +102,16 @@ std::pair<std::string, float> student_list_t::get_largest_rate_group() {
 }
 
 
-std::vector<student_t> tree_traversal(const node_t* node) {
+std::vector<student_t*> tree_traversal(const node_t* node) {
     if (node == nullptr) {
         return {};
     }
 
-    std::vector<student_t> left_output = tree_traversal(node->get_left());
+    std::vector<student_t*> left_output = tree_traversal(node->get_left());
     student_t* student = node->get_student();
-    std::vector<student_t> right_output = tree_traversal(node->get_right());
+    std::vector<student_t*> right_output = tree_traversal(node->get_right());
 
-    left_output.push_back(*student);
+    left_output.push_back(student);
     left_output.insert(left_output.end(), right_output.begin(), right_output.end());
 
     return left_output;
@@ -119,7 +119,7 @@ std::vector<student_t> tree_traversal(const node_t* node) {
 
 
 void student_list_t::sort_by_name_surname_to_csv(const std::string& filename, bool write_csv) {
-    std::vector<student_t> traversal = tree_traversal(m_students);
+    std::vector<student_t*> traversal = tree_traversal(m_students);
 
     if (write_csv) {
         std::ofstream file(filename);
@@ -129,7 +129,7 @@ void student_list_t::sort_by_name_surname_to_csv(const std::string& filename, bo
         }
 
         for (auto& student : traversal) {
-            std::string csv_row = student.to_string();
+            std::string csv_row = student->to_string();
             file << csv_row + "\n";
         }
         file.close();

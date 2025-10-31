@@ -6,7 +6,7 @@
 #include <string>
 #include <unordered_map>
 
-#include "student.hpp"
+#include "../student/student.h"
 
 class node_t {
 private:
@@ -43,8 +43,8 @@ class student_list_t {
 private:
     node_t* m_students = nullptr;
 
-    std::unordered_map<std::string, std::vector<student_t>> m_hash_group;
-    std::unordered_map<std::string, student_t> m_hash_emails;
+    std::unordered_map<std::string, std::vector<student_t*>> m_hash_group;
+    std::unordered_map<std::string, student_t*> m_hash_emails;
 
 public:
     explicit student_list_t(const std::vector<std::string>& csv);

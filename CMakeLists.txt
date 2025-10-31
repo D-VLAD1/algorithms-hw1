@@ -8,6 +8,8 @@ include_directories(include)
 
 add_executable(algorithms_hw1
         src/main.cpp
-        include/student.cpp
-        include/student_list.cpp
+        include/student/student.cpp
+        include/implementation1/student_list.cpp
+        include/implementation2/student_list2.cpp
+        include/implementation2/student_list2.h
 )

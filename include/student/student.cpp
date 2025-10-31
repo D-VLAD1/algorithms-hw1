@@ -1,10 +1,10 @@
 #include <sstream>
 
-#include "student.hpp"
+#include "student.h"
 
 
 student_t::student_t(): m_name("None"), m_surname("None"), m_email("None"), m_birth_year(0),
-m_birth_month(0), m_birth_day(0), m_group("None"), m_rating(.0), m_phone_number("None") {}
+                        m_birth_month(0), m_birth_day(0), m_group("None"), m_rating(.0), m_phone_number("None") {}
 
 student_t::student_t(const std::string& csv_row) {
     std::vector<std::string> split_data;
