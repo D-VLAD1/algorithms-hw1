@@ -57,6 +57,7 @@ std::pair<std::string, float> student_list3_t::get_largest_rate_group() {
         for (int i = 0; i < group_size; ++i) {
             student_t* curr_student = queue.front();
             sum += curr_student->get_rating();
+            queue.pop();
             queue.push(curr_student);
         }
         sum /= group_size;
