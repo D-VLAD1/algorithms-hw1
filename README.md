@@ -13,6 +13,7 @@ mkdir build
 cd build
 cmake ..
 cmake --build .
+./algorithms_hw1
 ```
 
 The work is done by Vladyslav Danylyshyn.
