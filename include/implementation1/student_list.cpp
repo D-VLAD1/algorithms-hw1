@@ -52,18 +52,19 @@ student_list_t::student_list_t(const std::vector<std::string>& csv) {
 
         std::string group = student->get_group();
         std::string email = student->get_email();
-        m_hash_group[group].push_back(student);
+        m_hash_group[group].insert(student);
         m_hash_emails[email] = student;
     }
 }
 
-std::pair<std::string, int> student_list_t::get_largest_group() {
-    std::pair<std::string, int> max_group = {"", 0};
+std::pair<std::string, size_t> student_list_t::get_largest_group() {
+    std::pair<std::string, size_t> max_group = {"", 0};
 
     for (auto& [group, students] : m_hash_group) {
         size_t group_size = students.size();
         if (group_size > max_group.second) {
-            max_group = {group, group_size};
+            max_group.first = group;
+            max_group.second = group_size;
         }
     }
 
@@ -74,13 +75,11 @@ void student_list_t::change_group_by_email(const std::string& email, const std::
     student_t* student = m_hash_emails[email];
 
     std::string prev_group = student->get_group();
-    std::vector<student_t*>& prev_group_members = m_hash_group[prev_group];
-    std::erase_if(prev_group_members,
-        [&](const student_t* s) { return s->get_email() == email; }
-        );
+    std::set<student_t*>& prev_group_members = m_hash_group[prev_group];
+    prev_group_members.erase(student);
 
     student->set_group(new_group);
-    m_hash_group[new_group].push_back(student);
+    m_hash_group[new_group].insert(student);
 }
 
 std::pair<std::string, float> student_list_t::get_largest_rate_group() {
@@ -94,13 +93,13 @@ std::pair<std::string, float> student_list_t::get_largest_rate_group() {
         curr_sum /= students.size();
 
         if (curr_sum > max_group.second) {
-            max_group = {group_name, curr_sum};
+            max_group.first = group_name;
+            max_group.second = curr_sum;
         }
     }
 
     return max_group;
 }
-
 
 std::vector<student_t*> tree_traversal(const node_t* node) {
     if (node == nullptr) {
@@ -116,7 +115,6 @@ std::vector<student_t*> tree_traversal(const node_t* node) {
 
     return left_output;
 }
-
 
 void student_list_t::sort_by_name_surname_to_csv(const std::string& filename, bool write_csv) {
     std::vector<student_t*> traversal = tree_traversal(m_students);

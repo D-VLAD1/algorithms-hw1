@@ -7,13 +7,14 @@
 #include "student/student.h"
 #include "implementation1/student_list.h"
 #include "implementation2/student_list2.h"
+#include "implementation3/student_list3.h"
 
 #define DATA_FILENAME "../data/students.csv"
 #define SORTED_STUDENTS_FILENAME "../data/sorted_students.csv"
 
 static std::random_device rd;
 static std::mt19937 gen(rd());
-static std::uniform_int_distribution dist(0, 99);
+static std::uniform_int_distribution dist(0, 111);
 
 
 std::vector<std::string> read_csv(const std::string& filename, int data_amount) {
@@ -55,7 +56,6 @@ std::pair<std::vector<StudentListT*>, std::vector<std::string>> generate_student
 
 template<typename StudentListT>
 void launch_bench(std::vector<StudentListT*> data) {
-    std::cout << "Launch of iterations through data (realization 1)\n" << std::endl;
     int len = 10;
     for (auto* student_list: data) {
         std::cout << "Start test with amount of elements: " << len << std::endl;
@@ -63,8 +63,8 @@ void launch_bench(std::vector<StudentListT*> data) {
         int iters = 0;
         while (true) {
             auto now = std::chrono::steady_clock::now();
-            auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - start).count();
-            if (elapsed >= 10) {
+            auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
+            if (elapsed >= 10000) {
                 break;
             }
 
@@ -113,13 +113,18 @@ void launch_sort_bench(const std::vector<std::string>& csv_100000, student_list_
 
 
 int main() {
+    std::cout << "\nLaunch of iterations through data (realization std::unordered_map)\n" << std::endl;
     auto [data, csv1_100000] = generate_student_list<student_list_t>();
     launch_bench(data);
 
-    auto [data2, _] = generate_student_list<student_list2_t>();
+    std::cout << "\nLaunch of iterations through data (realization std::vector + std::pair)\n" << std::endl;
+    auto [data2, csv2_100000] = generate_student_list<student_list2_t>();
+    launch_bench(data2);
+
+    std::cout << "\nLaunch of iterations through data (realization std::queue + std::map)\n" << std::endl;
+    auto [data3, csv3_100000] = generate_student_list<student_list3_t>();
     launch_bench(data2);
 
     launch_sort_bench(csv1_100000, data[4]);
-
     return 0;
 }

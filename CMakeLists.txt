@@ -12,4 +12,6 @@ add_executable(algorithms_hw1
         include/implementation1/student_list.cpp
         include/implementation2/student_list2.cpp
         include/implementation2/student_list2.h
+        include/implementation3/student_list3.cpp
+        include/implementation3/student_list3.h
 )

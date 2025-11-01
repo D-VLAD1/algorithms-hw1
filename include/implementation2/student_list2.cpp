@@ -22,12 +22,13 @@ student_list2_t::student_list2_t(const std::vector<std::string>& csv) {
     }
 }
 
-std::pair<std::string, int> student_list2_t::get_largest_group() {
-    std::pair<std::string, int> largest{"", 0};
+std::pair<std::string, size_t> student_list2_t::get_largest_group() {
+    std::pair<std::string, size_t> largest{"", 0};
     for (auto& group: m_vec_group) {
         size_t group_size = group.second.size();
         if (group_size > largest.second) {
-            largest = {group.first, group_size};
+            largest.first = group.first;
+            largest.second = group_size;
         }
     }
     return largest;
@@ -65,7 +66,8 @@ std::pair<std::string, float> student_list2_t::get_largest_rate_group() {
         rate /= m_students.size();
 
         if (rate > largest.second) {
-            largest = {group.first, rate};
+            largest.first = group.first;
+            largest.second = rate;
         }
     }
     return largest;
@@ -73,6 +75,9 @@ std::pair<std::string, float> student_list2_t::get_largest_rate_group() {
 
 
 student_list2_t::~student_list2_t() {
+    for (auto& student: m_students) {
+        delete student;
+    }
     m_vec_group.clear();
     m_students.clear();
 }

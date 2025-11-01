@@ -1,7 +1,7 @@
 #ifndef ALGORITHMS_HW1_STUDENT_LIST_H
 #define ALGORITHMS_HW1_STUDENT_LIST_H
 
-#include <memory>
+#include <set>
 #include <vector>
 #include <string>
 #include <unordered_map>
@@ -43,13 +43,13 @@ class student_list_t {
 private:
     node_t* m_students = nullptr;
 
-    std::unordered_map<std::string, std::vector<student_t*>> m_hash_group;
+    std::unordered_map<std::string, std::set<student_t*>> m_hash_group;
     std::unordered_map<std::string, student_t*> m_hash_emails;
 
 public:
     explicit student_list_t(const std::vector<std::string>& csv);
 
-    std::pair<std::string, int> get_largest_group();
+    std::pair<std::string, size_t> get_largest_group();
     void change_group_by_email(const std::string& email, const std::string& new_group);
     std::pair<std::string, float> get_largest_rate_group();
 

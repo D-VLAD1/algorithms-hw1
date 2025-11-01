@@ -13,7 +13,7 @@ private:
 public:
     explicit student_list2_t(const std::vector<std::string>& csv);
 
-    std::pair<std::string, int> get_largest_group();
+    std::pair<std::string, size_t> get_largest_group();
     void change_group_by_email(const std::string& email, const std::string& new_group);
     std::pair<std::string, float> get_largest_rate_group();
 
